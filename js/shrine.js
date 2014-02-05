@@ -1,5 +1,5 @@
 var camera, scene, renderer;
-var d20, dieMaterial, d20Mesh;
+var d20, dieMaterial, mesh;
 var i;
 
 init();
@@ -12,11 +12,28 @@ function init() {
     scene = new THREE.Scene();
 
     d20 = new THREE.IcosahedronGeometry( 120, 0 );
+    poleR = new THREE.CylinderGeometry(10, 10, 600, 8, 1, false);
+    poleL = new THREE.CylinderGeometry(10, 10, 600, 8, 1, false);
+    podium = new THREE.CylinderGeometry(100, 100, 500, 8, 1, false);
+    podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
+    podiumMat = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false } );
     // wireframe: draw lines instead of coloring sides
     dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
-    d20Mesh = new THREE.Mesh( d20, dieMaterial );
-    d20Mesh.position.set(0,200,0);
-    scene.add( d20Mesh );
+    pRMesh = new THREE.Mesh( poleR , podiumMat );
+    pLMesh = new THREE.Mesh( poleL , podiumMat );
+    pMesh = new THREE.Mesh( podium , podiumMat );
+    ptMesh = new THREE.Mesh( podiumTop , podiumMat );
+    d20mesh = new THREE.Mesh( d20, dieMaterial );
+    pRMesh.position.set(500,-200,0);
+    pLMesh.position.set(-500,-200,0);
+    d20mesh.position.set(0,250,0);
+    pMesh.position.set(0,-200,0);
+    ptMesh.position.set(0,50,0);
+    scene.add( d20mesh );
+    scene.add( pMesh );
+    scene.add( pRMesh );
+    scene.add( pLMesh );
+    scene.add( ptMesh );
 
     // Add lights
     var leftLight = new THREE.PointLight( 0x00ff00 );
@@ -33,10 +50,13 @@ function init() {
 }
 
 function animate() {
+    i = 0;
     requestAnimationFrame( animate );
     
-    d20Mesh.rotation.y += 0.01;
-    d20Mesh.rotation.x += 0.01;
+    i += 0.01;
+    d20mesh.rotation.y += 0.01;
+    d20mesh.rotation.z += 0;
+    d20mesh.rotation.x += 0.01;
 
     renderer.render( scene, camera );
 }
