@@ -1,5 +1,5 @@
 var camera, scene, renderer;
-var d20, dieMaterial, mesh;
+var d20, dieMaterial, d20Mesh;
 var i;
 
 init();
@@ -13,15 +13,16 @@ function init() {
 
     d20 = new THREE.IcosahedronGeometry( 120, 0 );
     // wireframe: draw lines instead of coloring sides
-    dieMaterial = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false } );
-    mesh = new THREE.Mesh( d20, dieMaterial );
-    scene.add( mesh );
+    dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
+    d20Mesh = new THREE.Mesh( d20, dieMaterial );
+    d20Mesh.position.set(0,200,0);
+    scene.add( d20Mesh );
 
     // Add lights
-    var leftLight = new THREE.PointLight( 0xffffff );
+    var leftLight = new THREE.PointLight( 0x00ff00 );
     leftLight.position.set( -600, 0, 0 ); // x, y, z?
     scene.add( leftLight );
-    var rightLight = new THREE.PointLight( 0xffffff );
+    var rightLight = new THREE.PointLight( 0xff0000 );
     rightLight.position.set( 600, 0, 0 ); // x, y, z?
     scene.add( rightLight );
 
@@ -32,12 +33,10 @@ function init() {
 }
 
 function animate() {
-    i = 0;
     requestAnimationFrame( animate );
     
-    i += 0.01;
-    //mesh.rotation.y += 0.015;
-    mesh.rotation.y += Math.sin(i);
+    d20Mesh.rotation.y += 0.01;
+    d20Mesh.rotation.x += 0.01;
 
     renderer.render( scene, camera );
 }
