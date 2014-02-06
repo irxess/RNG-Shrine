@@ -18,12 +18,18 @@ function init() {
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
     podiumMat = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false } );
     // wireframe: draw lines instead of coloring sides
-    dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
+	var dieMaterial = [];
+	for(var i=0;i<20;i++){
+		dieMaterial[i] = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/test - Kopi ('+(i+1).toString()+').png') } );
+	}
+	var d20meshFaceMaterial = new THREE.MeshFaceMaterial( dieMaterial	);
+	//dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
     pRMesh = new THREE.Mesh( poleR , podiumMat );
     pLMesh = new THREE.Mesh( poleL , podiumMat );
     pMesh = new THREE.Mesh( podium , podiumMat );
     ptMesh = new THREE.Mesh( podiumTop , podiumMat );
-    d20mesh = new THREE.Mesh( d20, dieMaterial );
+    d20mesh = new THREE.Mesh( d20, d20meshFaceMaterial );
+	//d20mesh = new THREE.Mesh( d20, dieMaterial );
     pRMesh.position.set(500,-200,0);
     pLMesh.position.set(-500,-200,0);
     d20mesh.position.set(0,250,0);
