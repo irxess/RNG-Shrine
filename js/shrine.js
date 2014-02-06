@@ -11,25 +11,34 @@ function init() {
 
     scene = new THREE.Scene();
 
-    d20 = new THREE.IcosahedronGeometry( 120, 0 );
+    geometry = new THREE.IcosahedronGeometry( 120, 0 );
     poleR = new THREE.CylinderGeometry(10, 10, 600, 16, 1, false);
     poleL = new THREE.CylinderGeometry(10, 10, 600, 16, 1, false);
     podium = new THREE.CylinderGeometry(100, 100, 500, 8, 1, false);
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
     podiumMat = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false } );
     // wireframe: draw lines instead of coloring sides
-	var dieMaterial = [];
-	for(var i=0;i<20;i++){
-		dieMaterial[i] = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/test - Kopi ('+(i+1).toString()+').png') } );
-	}
-	var d20meshFaceMaterial = new THREE.MeshFaceMaterial( dieMaterial	);
-	//dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
-    pRMesh = new THREE.Mesh( poleR , podiumMat );
+    //dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
+    var d20materials = [];
+	geometry.faceVertexUvs[0] = [];
+    for(var i = 0; i < geometry.faces.length; i++){      
+                     
+                     
+		geometry.faceVertexUvs[0].push([
+		new THREE.Vector2( 0,0 ),
+		new THREE.Vector2( 0,1 ),
+		new THREE.Vector2( 1,1),]);
+                     
+                     
+    geometry.faces[i].materialIndex = i;
+    d20materials.push(new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/test - Kopi ('+(1).toString()+').png') } ));
+	}    
+	var d20meshFaceMaterial = new THREE.MeshFaceMaterial( d20materials );
+	pRMesh = new THREE.Mesh( poleR , podiumMat );
     pLMesh = new THREE.Mesh( poleL , podiumMat );
     pMesh = new THREE.Mesh( podium , podiumMat );
     ptMesh = new THREE.Mesh( podiumTop , podiumMat );
-    d20mesh = new THREE.Mesh( d20, d20meshFaceMaterial );
-	//d20mesh = new THREE.Mesh( d20, dieMaterial );
+    d20mesh = new THREE.Mesh( geometry, d20meshFaceMaterial );
     pRMesh.position.set(500,-200,0);
     pLMesh.position.set(-500,-200,0);
     d20mesh.position.set(0,250,0);
