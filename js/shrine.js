@@ -12,8 +12,8 @@ function init() {
     scene = new THREE.Scene();
 
     d20 = new THREE.IcosahedronGeometry( 120, 0 );
-    poleR = new THREE.CylinderGeometry(10, 10, 600, 8, 1, false);
-    poleL = new THREE.CylinderGeometry(10, 10, 600, 8, 1, false);
+    poleR = new THREE.CylinderGeometry(10, 10, 600, 16, 1, false);
+    poleL = new THREE.CylinderGeometry(10, 10, 600, 16, 1, false);
     podium = new THREE.CylinderGeometry(100, 100, 500, 8, 1, false);
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
     podiumMat = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false } );
