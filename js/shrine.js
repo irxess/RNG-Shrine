@@ -14,8 +14,8 @@ function init() {
     geometry = new THREE.IcosahedronGeometry( 120, 0 );
     poleR = new THREE.CylinderGeometry(10, 10, 600, 16, 1, false);
     poleL = new THREE.CylinderGeometry(10, 10, 600, 16, 1, false);
-    podium = new THREE.CylinderGeometry(100, 100, 500, 8, 1, false);
-    podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
+    podium = new THREE.CylinderGeometry(100, 100, 500, 16, 1, false);
+    podiumTop = new THREE.CylinderGeometry(150, 150, 50, 16, 1, false);
     podiumMat = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false } );
     // wireframe: draw lines instead of coloring sides
     //dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
@@ -31,7 +31,7 @@ function init() {
                      
                      
     geometry.faces[i].materialIndex = i;
-    d20materials.push(new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/test - Kopi ('+(1).toString()+').png') } ));
+    d20materials.push(new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/marmor.jpg') } ));
 	}    
 	var d20meshFaceMaterial = new THREE.MeshFaceMaterial( d20materials );
 	pRMesh = new THREE.Mesh( poleR , podiumMat );
