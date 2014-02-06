@@ -31,12 +31,26 @@ function init() {
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
     var testSphere = new THREE.SphereGeometry( 100, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
     podiumMaterial = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
-    dieMaterial = new THREE.MeshLambertMaterial( { wireframe: false, emissive: 0xaaaaaa } );
+    
     pRMesh = new THREE.Mesh( poleR , podiumMaterial );
     pLMesh = new THREE.Mesh( poleL , podiumMaterial );
     pMesh = new THREE.Mesh( podium , podiumMaterial );
     ptMesh = new THREE.Mesh( podiumTop , podiumMaterial );
-    d20mesh = new THREE.Mesh( d20, dieMaterial );
+    
+    var d20materials = [];
+	d20.faceVertexUvs[0] = [];
+    for(var i = 0; i < d20.faces.length; i++) {      
+		d20.faceVertexUvs[0].push([
+		    new THREE.Vector2( 0,0 ),
+		    new THREE.Vector2( 0,1 ),
+		    new THREE.Vector2( 1,1 ), ]);
+        
+        d20.faces[i].materialIndex = i;
+        d20materials.push(new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/marmor.jpg') } ));
+	}    
+	var d20meshFaceMaterial = new THREE.MeshFaceMaterial( d20materials );
+    d20mesh = new THREE.Mesh( d20, d20meshFaceMaterial );
+    
     pRMesh.position.set( rightPolePositionX, polePositionY, 0);
     pLMesh.position.set( leftPolePositionX, polePositionY, 0);
     d20mesh.position.set( 0, d20PositionY, 0 );
