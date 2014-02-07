@@ -1,6 +1,6 @@
 var camera, scene, renderer;
 var mesh;
-var poleR, poleR, podium, podiumTop, d20; // shapes
+var poleR, poleR, podium, podiumTop, d20, floor; // shapes
 var dieMaterial, podiumMaterial; //materials
 var lefLight, rightLight, movingTestLight; //lights
 var i;
@@ -20,9 +20,16 @@ var sphereHeight = 45;
 init();
 animate();
 
+document.body.addEventListener("mousemove", function(e){
+	camera.rotation.y = (e.clientX / 100)
+	camera.rotation.x = -(e.clientY / 100)
+})
+
 function init() {
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
     camera.position.z = cameraDistance; // how far zoomed out we are
+	camera.rotation.z = (Math.PI);
+	//camera.position.x = -1000;
 
     scene = new THREE.Scene();
 
@@ -35,6 +42,7 @@ function init() {
     ptMesh.position.set(0,50,0);
     scene.add( pMesh );
     scene.add( ptMesh );
+	
     
     poleR = new THREE.CylinderGeometry(poleRadius, poleRadius, poleLength, smallObjectsDetail, 1, false);
     poleL = new THREE.CylinderGeometry(poleRadius, poleRadius, poleLength, smallObjectsDetail, 1, false);
@@ -104,6 +112,6 @@ function animate() {
     d20mesh.rotation.x += 0.01;
     movingTestLight.intensity -= 0.006;
     movingTestLight.position.set( movingTestLight.position + 5 );
-
+	
     renderer.render( scene, camera );
 }
