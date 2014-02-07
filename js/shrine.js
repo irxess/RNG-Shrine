@@ -60,10 +60,10 @@ function init() {
     d20mesh.position.set( 0, d20PositionY, 0 );
     scene.add( d20mesh );
 
-    var testSphere = new THREE.SphereGeometry( 100, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
-    tmpMesh = new THREE.Mesh( testSphere, dieMaterial );
+    var testSphere = new THREE.SphereGeometry( 45, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
+    tmpMesh = new THREE.Mesh( testSphere, podiumMaterial );
     tmpMesh.material.side = THREE.DoubleSide;
-    tmpMesh.position.set(-300, 0, 0);
+    tmpMesh.position.set(leftPolePositionX, poleLength/2 + polePositionY, 0);
     scene.add( tmpMesh );
 
     // Add lights
