@@ -1,11 +1,12 @@
 var camera, scene, renderer;
 var mesh;
 var poleR, poleR, podium, podiumTop, d20; // shapes
-var dieMaterial, podiumMaterial;
+var dieMaterial, podiumMaterial; //materials
+var lefLight, rightLight, movingTestLight; //lights
 var i;
 
 
-// sizes
+// constants
 var cameraDistance = 800;
 var smallObjectsDetail = 10;
 var poleLength = 600;
@@ -14,6 +15,7 @@ var rightPolePositionX = -leftPolePositionX;
 var polePositionY = -200;
 var poleRadius = 10;
 var d20PositionY = 250;
+var sphereHeight = 45;
 
 init();
 animate();
@@ -60,26 +62,31 @@ function init() {
     d20mesh.position.set( 0, d20PositionY, 0 );
     scene.add( d20mesh );
 
-    var leftSphere = new THREE.SphereGeometry( 45, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
-    leftSphereMesh = new THREE.Mesh( leftSphere, podiumMaterial );
+    var leftSphere = new THREE.SphereGeometry( sphereHeight, smallObjectsDetail/2, smallObjectsDetail/2, Math.PI, Math.PI, Math.PI/2 );
+    var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xaaaa77, emissive: 0x555555 } );
+    leftSphereMesh = new THREE.Mesh( leftSphere, sphereMaterial );
     leftSphereMesh.material.side = THREE.DoubleSide;
-    leftSphereMesh.position.set( leftPolePositionX, poleLength/2 + polePositionY, 0);
+    leftSphereMesh.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
     scene.add( leftSphereMesh );
 
-    var rightSphere = new THREE.SphereGeometry( 45, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
-    rightSphereMesh = new THREE.Mesh( rightSphere, podiumMaterial );
+    var rightSphere = new THREE.SphereGeometry( sphereHeight, smallObjectsDetail/2, smallObjectsDetail/2, Math.PI, Math.PI, Math.PI/2 );
+    rightSphereMesh = new THREE.Mesh( rightSphere, sphereMaterial );
     rightSphereMesh.material.side = THREE.DoubleSide;
-    rightSphereMesh.position.set( rightPolePositionX, poleLength/2 + polePositionY, 0);
+    rightSphereMesh.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
     scene.add( rightSphereMesh );
 
     // Add lights
     var leftLight = new THREE.PointLight( 0x00ff00 );
-    leftLight.position.set( leftPolePositionX, 0, 0 );
-    scene.add( leftLight );
+    leftLight.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0 );
+    //scene.add( leftLight );
     
     var rightLight = new THREE.PointLight( 0xff0000 );
-    rightLight.position.set( rightPolePositionX, 0, 0 );
-    scene.add( rightLight );
+    rightLight.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0 );
+    //scene.add( rightLight );
+    
+    movingTestLight = new THREE.PointLight( 0xffbb44 );
+    movingTestLight.position.set(leftPolePositionX - 20 );
+    scene.add( movingTestLight );
 
     renderer = new THREE.CanvasRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -95,6 +102,8 @@ function animate() {
     d20mesh.rotation.y += 0.01;
     d20mesh.rotation.z += 0;
     d20mesh.rotation.x += 0.01;
+    movingTestLight.intensity -= 0.006;
+    movingTestLight.position.set( movingTestLight.position + 5 );
 
     renderer.render( scene, camera );
 }
