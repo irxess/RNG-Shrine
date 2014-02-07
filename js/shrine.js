@@ -53,7 +53,7 @@ function init() {
 		    new THREE.Vector2( 1,1 ), ]);
         
         d20.faces[i].materialIndex = i;
-        d20materials.push(new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/marmor.jpg') } ));
+        d20materials.push(new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D20/'+(1+i)+'.png') } ));
 	}    
 	var d20meshFaceMaterial = new THREE.MeshFaceMaterial( d20materials );
     d20mesh = new THREE.Mesh( d20, d20meshFaceMaterial );
