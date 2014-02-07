@@ -26,7 +26,7 @@ function init() {
 
     podium = new THREE.CylinderGeometry(100, 100, 500, 14, 1, false);
     podiumMaterial = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
-    podiumTop = new THREE.CylinderGeometry(150, 150, 50, 8, 1, false);
+    podiumTop = new THREE.CylinderGeometry(150, 150, 50, 14, 1, false);
     pMesh = new THREE.Mesh( podium , podiumMaterial );
     ptMesh = new THREE.Mesh( podiumTop , podiumMaterial );
     pMesh.position.set(0,-200,0);
@@ -60,11 +60,17 @@ function init() {
     d20mesh.position.set( 0, d20PositionY, 0 );
     scene.add( d20mesh );
 
-    var testSphere = new THREE.SphereGeometry( 45, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
-    tmpMesh = new THREE.Mesh( testSphere, podiumMaterial );
-    tmpMesh.material.side = THREE.DoubleSide;
-    tmpMesh.position.set(leftPolePositionX, poleLength/2 + polePositionY, 0);
-    scene.add( tmpMesh );
+    var leftSphere = new THREE.SphereGeometry( 45, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
+    leftSphereMesh = new THREE.Mesh( leftSphere, podiumMaterial );
+    leftSphereMesh.material.side = THREE.DoubleSide;
+    leftSphereMesh.position.set( leftPolePositionX, poleLength/2 + polePositionY, 0);
+    scene.add( leftSphereMesh );
+
+    var rightSphere = new THREE.SphereGeometry( 45, smallObjectsDetail, smallObjectsDetail, Math.PI, Math.PI, Math.PI/2 );
+    rightSphereMesh = new THREE.Mesh( rightSphere, podiumMaterial );
+    rightSphereMesh.material.side = THREE.DoubleSide;
+    rightSphereMesh.position.set( rightPolePositionX, poleLength/2 + polePositionY, 0);
+    scene.add( rightSphereMesh );
 
     // Add lights
     var leftLight = new THREE.PointLight( 0x00ff00 );
