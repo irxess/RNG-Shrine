@@ -1,5 +1,5 @@
 var camera, scene, renderer;
-var mesh;
+var mesh, dice1, dice2;
 var poleR, poleR, podium, podiumTop, d20, floor; // shapes
 var dieMaterial, podiumMaterial, poleMat, wall, rust; //materials
 var lefLight, rightLight; //lights
@@ -51,6 +51,22 @@ function init() {
 	boxMesh.flipSided = true;
     scene.add( boxMesh );
 	
+	var dice = new THREE.CubeGeometry( 50, 50, 50,  4, 4, 4, null, true);
+	var d1 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D6/1.jpg'), overdraw: true} );
+	var d6 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D6/2.jpg'), overdraw: true} );
+	var d3 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D6/3.jpg'), overdraw: true} );
+	var d4 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D6/4.jpg'), overdraw: true} );
+	var d5 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D6/5.jpg'), overdraw: true} );
+	var d2 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/D6/6.jpg'), overdraw: true} );
+	var dicemat = [d1,d2,d3,d4,d5,d6];
+	dice1 = new THREE.Mesh(dice, new THREE.MeshFaceMaterial( dicemat ) );
+	dice2 = new THREE.Mesh(dice, new THREE.MeshFaceMaterial( dicemat ) );
+	dice1.position.set( rightPolePositionX, polePositionY + poleLength/2 + sphereHeight + 70, 0);
+    dice2.position.set( leftPolePositionX, polePositionY + poleLength/2 + sphereHeight + 70, 0);
+	scene.add( dice1 );
+	scene.add( dice2 );
+	
+	
     poleR = new THREE.CylinderGeometry(poleRadius, poleRadius, poleLength, smallObjectsDetail, 1, false);
     poleL = new THREE.CylinderGeometry(poleRadius, poleRadius, poleLength, smallObjectsDetail, 1, false);
     pRMesh = new THREE.Mesh( poleR , poleMat );
@@ -101,8 +117,8 @@ function init() {
     rightLight.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight + 10, 0 );
     scene.add( rightLight );
 
-    //renderer = new THREE.CanvasRenderer();
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.CanvasRenderer();
+    //renderer = new THREE.WebGLRenderer();
     renderer.shadowMapEnabled = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -117,7 +133,11 @@ function animate() {
 function render() 
 {
     d20mesh.rotation.y += 0.01;
+	dice1.rotation.y -= 0.01;
+	dice2.rotation.y -= 0.01;
     d20mesh.rotation.z += 0;
     d20mesh.rotation.x += 0.01;
+	dice1.rotation.x -= 0.01;
+	dice2.rotation.x -= 0.01;
 	renderer.render( scene, camera );
 }
