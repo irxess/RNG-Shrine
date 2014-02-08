@@ -39,7 +39,7 @@ function init() {
 	podiumMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/podium.jpg'),  overdraw: true} );
 	poleMat = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/pole.jpg'), overdraw: true } );
 	//podiumMaterial = new THREE.MeshNormalMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
-    podiumTop = new THREE.CylinderGeometry(150, 150, 50, 14, 1, false);
+    podiumTop = new THREE.CylinderGeometry(150, 125, 50, 14, 1, false);
     pMesh = new THREE.Mesh( podium , podiumMaterial );
     ptMesh = new THREE.Mesh( podiumTop , rust );
     pMesh.position.set(0,-200,0);
