@@ -1,7 +1,7 @@
 var camera, scene, renderer;
 var mesh;
 var poleR, poleR, podium, podiumTop, d20, floor; // shapes
-var dieMaterial, podiumMaterial; //materials
+var dieMaterial, podiumMaterial, poleMat, wall; //materials
 var lefLight, rightLight, movingTestLight; //lights
 var i;
 
@@ -20,21 +20,24 @@ var sphereHeight = 45;
 init();
 animate();
 
-document.body.addEventListener("mousemove", function(e){
+
+/*document.body.addEventListener("mousemove", function(e){
 	camera.rotation.y = (e.clientX / 100)
 	camera.rotation.x = -(e.clientY / 100)
-})
+})*/
 
 function init() {
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
     camera.position.z = cameraDistance; // how far zoomed out we are
-	camera.rotation.z = (Math.PI);
+	//camera.rotation.z = (Math.PI);
 	//camera.position.x = -1000;
 
     scene = new THREE.Scene();
 
     podium = new THREE.CylinderGeometry(100, 100, 500, 14, 1, false);
-    podiumMaterial = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
+    podiumMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/podium.jpg'),  overdraw: true} );
+	poleMat = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/pole.jpg'), overdraw: true } );
+	//podiumMaterial = new THREE.MeshNormalMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 14, 1, false);
     pMesh = new THREE.Mesh( podium , podiumMaterial );
     ptMesh = new THREE.Mesh( podiumTop , podiumMaterial );
@@ -43,16 +46,41 @@ function init() {
     scene.add( pMesh );
     scene.add( ptMesh );
 	
+	
+	/*
+	var skyGeometry = new THREE.CubeGeometry( 500, 500, 500,  4, 4, 4, null, true);	
+	var materialArray = [];
+	for (var i = 0; i < 6; i++)
+		materialArray.push( new THREE.MeshBasicMaterial({
+			map: THREE.ImageUtils.loadTexture( 'images/wall.jpg' ),
+			side: THREE.BackSide
+		}));
+	var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+	var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+	skyBox.flipSided = true;
+	scene.add( skyBox );
+	*/
+	
+	skyBox = new THREE.CubeGeometry( 3000, 3000, 3000,  4, 4, 4, null, true);
+	wall = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/wall.jpg'), side: THREE.BackSide, overdraw: true} );
+    floor = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/floor1.jpg'),side: THREE.BackSide, overdraw: true} );
+	var skyBoxMaterials = [wall,wall,wall,floor,wall,wall];
+	var meshBoxFaceMaterial = new THREE.MeshFaceMaterial( skyBoxMaterials );
+	boxMesh = new THREE.Mesh(skyBox, meshBoxFaceMaterial );
+    boxMesh.position.y = 500;
+	boxMesh.flipSided = true;
+    scene.add( boxMesh );
+	
     
     poleR = new THREE.CylinderGeometry(poleRadius, poleRadius, poleLength, smallObjectsDetail, 1, false);
     poleL = new THREE.CylinderGeometry(poleRadius, poleRadius, poleLength, smallObjectsDetail, 1, false);
-    pRMesh = new THREE.Mesh( poleR , podiumMaterial );
-    pLMesh = new THREE.Mesh( poleL , podiumMaterial );
+    pRMesh = new THREE.Mesh( poleR , poleMat );
+    pLMesh = new THREE.Mesh( poleL , poleMat );
+    scene.add( pLMesh );
+    
     pRMesh.position.set( rightPolePositionX, polePositionY, 0);
     pLMesh.position.set( leftPolePositionX, polePositionY, 0);
     scene.add( pRMesh );
-    scene.add( pLMesh );
-    
     d20 = new THREE.IcosahedronGeometry( 120, 0 );
     var d20materials = [];
 	d20.faceVertexUvs[0] = [];
@@ -75,26 +103,26 @@ function init() {
     leftSphereMesh = new THREE.Mesh( leftSphere, sphereMaterial );
     leftSphereMesh.material.side = THREE.DoubleSide;
     leftSphereMesh.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
-    scene.add( leftSphereMesh );
+    //scene.add( leftSphereMesh );
 
     var rightSphere = new THREE.SphereGeometry( sphereHeight, smallObjectsDetail/2, smallObjectsDetail/2, Math.PI, Math.PI, Math.PI/2 );
     rightSphereMesh = new THREE.Mesh( rightSphere, sphereMaterial );
     rightSphereMesh.material.side = THREE.DoubleSide;
     rightSphereMesh.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
-    scene.add( rightSphereMesh );
+    //scene.add( rightSphereMesh );
 
     // Add lights
     var leftLight = new THREE.PointLight( 0x00ff00 );
     leftLight.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0 );
-    //scene.add( leftLight );
+    scene.add( leftLight );
     
     var rightLight = new THREE.PointLight( 0xff0000 );
     rightLight.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0 );
-    //scene.add( rightLight );
+    scene.add( rightLight );
     
     movingTestLight = new THREE.PointLight( 0xffbb44 );
     movingTestLight.position.set(leftPolePositionX - 20 );
-    scene.add( movingTestLight );
+    //scene.add( movingTestLight );
 
     renderer = new THREE.CanvasRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -112,6 +140,10 @@ function animate() {
     d20mesh.rotation.x += 0.01;
     movingTestLight.intensity -= 0.006;
     movingTestLight.position.set( movingTestLight.position + 5 );
-	
-    renderer.render( scene, camera );
+	render();
+}
+
+function render() 
+{
+	renderer.render( scene, camera );
 }
