@@ -7,6 +7,9 @@ var i;
 
 
 // constants
+var screenWidth = window.innerWidth;
+var screenHeight = window.innerHeight;
+
 var cameraDistance = 800;
 var smallObjectsDetail = 10;
 var poleLength = 600;
@@ -18,7 +21,7 @@ var d20PositionY = 250;
 var sphereHeight = 45;
 
 init();
-animate();
+animate( new Date().getTime() );
 
 function init() {
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -27,7 +30,7 @@ function init() {
     scene = new THREE.Scene();
 
     podium = new THREE.CylinderGeometry(100, 100, 500, 14, 1, false);
-    podiumMaterial = new THREE.MeshLambertMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
+    podiumMaterial = new THREE.MeshNormalMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd, ambient: 0xffff00 } ); // wireframe: draw lines instead of coloring sides
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 14, 1, false);
     pMesh = new THREE.Mesh( podium , podiumMaterial );
     ptMesh = new THREE.Mesh( podiumTop , podiumMaterial );
@@ -63,7 +66,7 @@ function init() {
     scene.add( d20mesh );
 
     var leftSphere = new THREE.SphereGeometry( sphereHeight, smallObjectsDetail/2, smallObjectsDetail/2, Math.PI, Math.PI, Math.PI/2 );
-    var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xaaaa77, emissive: 0x555555 } );
+    var sphereMaterial = new THREE.MeshNormalMaterial( { color: 0x66ff66, emissive: 0xff0040, ambient: 0xffff00 } );
     leftSphereMesh = new THREE.Mesh( leftSphere, sphereMaterial );
     leftSphereMesh.material.side = THREE.DoubleSide;
     leftSphereMesh.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
@@ -77,16 +80,19 @@ function init() {
 
     // Add lights
     var leftLight = new THREE.PointLight( 0x00ff00 );
-    leftLight.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0 );
-    //scene.add( leftLight );
+    leftLight.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight - 5, 0 );
+    scene.add( leftLight );
     
     var rightLight = new THREE.PointLight( 0xff0000 );
-    rightLight.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0 );
-    //scene.add( rightLight );
+    rightLight.position.set( rightPolePositionX + 60, poleLength/2 + polePositionY + sphereHeight, 0 );
+    scene.add( rightLight );
     
     movingTestLight = new THREE.PointLight( 0xffbb44 );
     movingTestLight.position.set(leftPolePositionX - 20 );
     scene.add( movingTestLight );
+
+    var ambientLight = new THREE.AmbientLight( 0x404040 );
+    scene.add( ambientLight );
 
     renderer = new THREE.CanvasRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -94,11 +100,9 @@ function init() {
     document.body.appendChild( renderer.domElement );
 }
 
-function animate() {
-    i = 0;
+function animate(t) {
     requestAnimationFrame( animate );
     
-    i += 0.01;
     d20mesh.rotation.y += 0.01;
     d20mesh.rotation.z += 0;
     d20mesh.rotation.x += 0.01;
