@@ -1,7 +1,7 @@
 var camera, scene, renderer;
 var mesh;
 var poleR, poleR, podium, podiumTop, d20, floor; // shapes
-var dieMaterial, podiumMaterial, poleMat, wall; //materials
+var dieMaterial, podiumMaterial, poleMat, wall, rust; //materials
 var lefLight, rightLight, movingTestLight; //lights
 var i;
 
@@ -35,12 +35,13 @@ function init() {
     scene = new THREE.Scene();
 
     podium = new THREE.CylinderGeometry(100, 100, 500, 14, 1, false);
-    podiumMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/podium.jpg'),  overdraw: true} );
+    rust = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/rust.jpg'),  overdraw: true} );
+	podiumMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/podium.jpg'),  overdraw: true} );
 	poleMat = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/pole.jpg'), overdraw: true } );
 	//podiumMaterial = new THREE.MeshNormalMaterial( { color: 0xffcc00, wireframe: false, emissive: 0xdddddd } ); // wireframe: draw lines instead of coloring sides
     podiumTop = new THREE.CylinderGeometry(150, 150, 50, 14, 1, false);
     pMesh = new THREE.Mesh( podium , podiumMaterial );
-    ptMesh = new THREE.Mesh( podiumTop , podiumMaterial );
+    ptMesh = new THREE.Mesh( podiumTop , rust );
     pMesh.position.set(0,-200,0);
     ptMesh.position.set(0,50,0);
     scene.add( pMesh );
@@ -63,7 +64,7 @@ function init() {
 	
 	skyBox = new THREE.CubeGeometry( 3000, 3000, 3000,  4, 4, 4, null, true);
 	wall = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/wall.jpg'), side: THREE.BackSide, overdraw: true} );
-    floor = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/floor1.jpg'),side: THREE.BackSide, overdraw: true} );
+    floor = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/floor.jpg'),side: THREE.BackSide, overdraw: true} );
 	var skyBoxMaterials = [wall,wall,wall,floor,wall,wall];
 	var meshBoxFaceMaterial = new THREE.MeshFaceMaterial( skyBoxMaterials );
 	boxMesh = new THREE.Mesh(skyBox, meshBoxFaceMaterial );
@@ -99,17 +100,17 @@ function init() {
     scene.add( d20mesh );
 
     var leftSphere = new THREE.SphereGeometry( sphereHeight, smallObjectsDetail/2, smallObjectsDetail/2, Math.PI, Math.PI, Math.PI/2 );
-    var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xaaaa77, emissive: 0x555555 } );
-    leftSphereMesh = new THREE.Mesh( leftSphere, sphereMaterial );
+    //var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xaaaa77, emissive: 0x555555 } );
+    leftSphereMesh = new THREE.Mesh( leftSphere, rust );
     leftSphereMesh.material.side = THREE.DoubleSide;
     leftSphereMesh.position.set( leftPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
-    //scene.add( leftSphereMesh );
+    scene.add( leftSphereMesh );
 
     var rightSphere = new THREE.SphereGeometry( sphereHeight, smallObjectsDetail/2, smallObjectsDetail/2, Math.PI, Math.PI, Math.PI/2 );
-    rightSphereMesh = new THREE.Mesh( rightSphere, sphereMaterial );
+    rightSphereMesh = new THREE.Mesh( rightSphere, rust );
     rightSphereMesh.material.side = THREE.DoubleSide;
     rightSphereMesh.position.set( rightPolePositionX, poleLength/2 + polePositionY + sphereHeight, 0);
-    //scene.add( rightSphereMesh );
+    scene.add( rightSphereMesh );
 
     // Add lights
     var leftLight = new THREE.PointLight( 0x00ff00 );
